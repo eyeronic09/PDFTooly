@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import com.eyeronic09.freepdf.homescreen.domain.Repository.PdfReposistory
 import com.eyeronic09.freepdf.homescreen.domain.model.PdfFile
 
@@ -50,6 +51,7 @@ class ReposistoryImpl(private val context: Context) : PdfReposistory   {
                     uri = contentUri,
                     size = size
                 ))
+                Log.d("pdfFiles", "Found PDF: ${pdfFiles}, Path: $path")
             }
         }
         return pdfFiles

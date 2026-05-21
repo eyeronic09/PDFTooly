@@ -16,11 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.LocalTabNavigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import cafe.adriel.voyager.transitions.SlideTransition
+import com.eyeronic09.freepdf.homescreen.ui.HomeTab
 import com.eyeronic09.freepdf.ui.theme.FreepdfTheme
 
 @Composable
@@ -65,21 +67,10 @@ object _MainScreen : Screen {
                 },
                 content = { padding ->
                     Box(modifier = Modifier.padding(padding)) {
-
+                        CurrentTab()
                     }
                 }
             )
         }
     }
-}
-
-object HomeTab : Tab {
-
-    @Composable
-    override fun Content() {
-        Text("Home Tab Content")
-    }
-
-    override val options: TabOptions
-        get() = TODO("Not yet implemented")
 }

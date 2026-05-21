@@ -7,5 +7,4 @@ data class PdfFile(
     val path: String,
     val uri: Uri,
     val size: Long,
-
 )
