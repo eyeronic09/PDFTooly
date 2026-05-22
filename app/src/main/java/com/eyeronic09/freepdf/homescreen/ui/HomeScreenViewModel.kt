@@ -1,8 +1,10 @@
 package com.eyeronic09.freepdf.homescreen.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eyeronic09.freepdf.homescreen.Utility.hasStoragePermission
 import com.eyeronic09.freepdf.homescreen.domain.Repository.PdfReposistory
 import com.eyeronic09.freepdf.homescreen.domain.model.PdfFile
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,6 +25,17 @@ class HomeScreenViewModel(private val repository: PdfReposistory) : ViewModel() 
     private val _pdfFiles = MutableStateFlow(HomeScreenUiState())
     val pdfFiles: StateFlow<HomeScreenUiState> = _pdfFiles.asStateFlow()
 
+    fun checkPermissionAndLoad(context: Context) {
+        if (hasStoragePermission(context)) {
+            loadedPDF()
+        } else {
+            _pdfFiles.update { it.copy(
+                loading = false,
+                error = "Permission denied"
+            ) }
+        }
+    }
+
     init {
         loadedPDF()
     }
@@ -40,10 +53,12 @@ class HomeScreenViewModel(private val repository: PdfReposistory) : ViewModel() 
                  _pdfFiles.update { currentState ->
                      currentState.copy(
                          pdfFiles = files,
-                         loading = false
+                         loading = false,
+                         error = ""
                      )
                  }
                  Log.d("files", files.toString())
+                     Log.d("ViewModelDebug", "Repository returned ${files.size} files")
              } catch (e: Exception) {
                  _pdfFiles.update { currentState ->
                      currentState.copy(

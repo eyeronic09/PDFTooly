@@ -1,6 +1,8 @@
 package com.eyeronic09.freepdf.homescreen.ui
 
 import android.os.Environment
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.eyeronic09.freepdf.R
 import com.eyeronic09.freepdf.homescreen.Utility.PermissionHandler
+import com.eyeronic09.freepdf.homescreen.Utility.hasStoragePermission
 import org.koin.androidx.compose.koinViewModel
 
 object HomeTab : Tab {
@@ -52,43 +55,58 @@ class _HomeScreen : Screen {
     }
 
     @Composable
-    fun HomeScreenRoute(viewModel: HomeScreenViewModel = koinViewModel()){
+    fun HomeScreenRoute(viewModel: HomeScreenViewModel = koinViewModel()) {
 
         val state by viewModel.pdfFiles.collectAsStateWithLifecycle()
         val event = viewModel::onEvent
 
-        HomeScreen(state = state , event)
+        HomeScreen(state = state, event)
     }
 
     @Composable
     fun HomeScreen(state: HomeScreenUiState, onEvent: (HomeScreenOnEvent) -> Unit) {
-        Box(modifier = Modifier.fillMaxSize()){
-            Scaffold (){ innerPadding ->
-                HomeScreenContent(state , modifier = Modifier.padding(innerPadding) ,onEvent)
+        Box(modifier = Modifier.fillMaxSize()) {
+            Scaffold() { innerPadding ->
+                HomeScreenContent(state, modifier = Modifier.padding(innerPadding), onEvent)
             }
         }
 
     }
 
     @Composable
-    fun HomeScreenContent(state: HomeScreenUiState, modifier: Modifier , onEvent: (HomeScreenOnEvent) -> Unit  ){
-        val pdfList = state.pdfFiles
-        PermissionHandler(
-            onPermissionGranted = {
-                onEvent(HomeScreenOnEvent.loadPdf)
-            }
-        )
-        LazyColumn(modifier = modifier.fillMaxSize()) {
-            items(pdfList) { pdf ->
-                ListItem(
-                    headlineContent = { Text(pdf.name) },
-                    leadingContent = {
-                        Icon(Icons.Default.PictureAsPdf, contentDescription = null)
-                    }
-                )
-            }
-        }
+    fun HomeScreenContent(
+        state: HomeScreenUiState,
+        modifier: Modifier,
+        onEvent: (HomeScreenOnEvent) -> Unit
+    ) {
+        val context = LocalContext.current
+        Log.d("HomeScreen", "PDF files count: ${state.pdfFiles.size}")
 
+
+        Log.d("HomeScreenDebug", "Path: Permission GRANTED")
+        if (state.pdfFiles.isNotEmpty()) {
+            PermissionHandler {
+                onEvent.invoke(HomeScreenOnEvent.loadPdf)
+            }
+            if (state.pdfFiles.isNotEmpty()) {
+                LazyColumn(modifier = modifier.fillMaxSize()) {
+                    items(state.pdfFiles) { pdf ->
+                        ListItem(
+                            headlineContent = { Text(pdf.name) },
+                            leadingContent = {
+                                Icon(Icons.Default.PictureAsPdf, contentDescription = null)
+                            }
+                        )
+                    }
+                }
+            } else if (state.loading) {
+                Text("Loading PDFs...", modifier = modifier)
+            } else {
+                Text(text = "No PDF files found", modifier = modifier)
+            }
+        } else {
+            Text(text = "No PDF files found", modifier = modifier)
+        }
     }
 }
 

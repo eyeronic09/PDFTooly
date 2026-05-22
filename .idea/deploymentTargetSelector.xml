@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2026-05-20T13:24:59.967486890Z">
+        <DropdownSelection timestamp="2026-05-22T08:34:34.697334485Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/home/eyeronic/.android/avd/Pixel_10_Pro.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/eyeronic/.android/avd/Pixel_8.avd" />
             </handle>
           </Target>
         </DropdownSelection>
