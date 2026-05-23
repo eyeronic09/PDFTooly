@@ -20,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Freepdf">
+        <activity android:name="com.rajat.pdfviewer.PdfViewerActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

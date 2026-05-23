@@ -11,6 +11,8 @@ composeBom = "2026.02.01"
 voyager = "1.0.1"
 material3 = "1.4.0"
 koin = "4.2.1"
+pdfViewer = "2.4.0"
+lifecycleProcess = "2.10.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,6 +37,8 @@ androidx-material-icons-extended = { group = "androidx.compose.material", name =
 androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+pdf-viewer = { group = "io.github.afreakyelf", name = "Pdf-Viewer", version.ref = "pdfViewer" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
