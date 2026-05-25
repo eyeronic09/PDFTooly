@@ -41,6 +41,9 @@ android {
 
 dependencies {
     implementation("io.github.afreakyelf:Pdf-Viewer:2.4.0")
+    implementation("com.github.Infomaniak:android-pdfview:3.2.16")
+    implementation("com.tom-roush:pdfbox-android:2.0.27.0")
+    implementation(libs.androidx.recyclerview)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

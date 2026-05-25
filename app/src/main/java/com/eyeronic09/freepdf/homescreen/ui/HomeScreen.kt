@@ -1,5 +1,6 @@
 package com.eyeronic09.freepdf.homescreen.ui
 
+import android.R
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -25,14 +26,14 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
 import com.eyeronic09.freepdf.PDFviewer._Pdfviewer
-import com.eyeronic09.freepdf.R
 import com.eyeronic09.freepdf.homescreen.Utility.PermissionHandler
 import org.koin.androidx.compose.koinViewModel
+
 
 object HomeTab : Tab {
     override val options: TabOptions
         @Composable
-        get() = TabOptions(0u , title = "Notes", icon = painterResource(R.drawable.outline_devices_24))
+        get() = TabOptions(0u , title = "Notes", icon = painterResource(R.drawable.btn_plus))
 
     @Composable
     override fun Content() {
@@ -78,29 +79,25 @@ class _HomeScreen : Screen {
 
 
 
-        Log.d("HomeScreenDebug", "Path: Permission GRANTED")
-        if (state.pdfFiles.isNotEmpty()) {
-            PermissionHandler {
-                onEvent.invoke(HomeScreenOnEvent.loadPdf)
-            }
-            if (state.pdfFiles.isNotEmpty()) {
-                LazyColumn(modifier = modifier.fillMaxSize()) {
-                    items(state.pdfFiles) { pdf ->
-                        ListItem(
-                            modifier = Modifier.clickable {
-                                navigator?.push(_Pdfviewer(pdf.uri.toString()))
-                            },
-                            headlineContent = { Text(pdf.name) },
-                            leadingContent = {
-                                Icon(Icons.Default.PictureAsPdf, contentDescription = null)
-                            }
-                        )
-                    }
+        PermissionHandler {
+            onEvent.invoke(HomeScreenOnEvent.loadPdf)
+        }
+
+        if (state.loading) {
+            Text("Loading PDFs...", modifier = modifier)
+        } else if (state.pdfFiles.isNotEmpty()) {
+            LazyColumn(modifier = modifier.fillMaxSize()) {
+                items(state.pdfFiles) { pdf ->
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            navigator?.push(_Pdfviewer(pdf.uri.toString()))
+                        },
+                        headlineContent = { Text(pdf.name) },
+                        leadingContent = {
+                            Icon(Icons.Default.PictureAsPdf, contentDescription = null)
+                        }
+                    )
                 }
-            } else if (state.loading) {
-                Text("Loading PDFs...", modifier = modifier)
-            } else {
-                Text(text = "No PDF files found", modifier = modifier)
             }
         } else {
             Text(text = "No PDF files found", modifier = modifier)
