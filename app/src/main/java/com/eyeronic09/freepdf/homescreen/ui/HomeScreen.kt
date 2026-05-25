@@ -1,6 +1,6 @@
 package com.eyeronic09.freepdf.homescreen.ui
 
-import android.R
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,11 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
-import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.currentOrThrow
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
-import com.eyeronic09.freepdf.PDFviewer._Pdfviewer
+import com.eyeronic09.freepdf.PDFviewer.SecondActivity
+import com.eyeronic09.freepdf.R
 import com.eyeronic09.freepdf.homescreen.Utility.PermissionHandler
 import org.koin.androidx.compose.koinViewModel
 
@@ -33,15 +32,15 @@ import org.koin.androidx.compose.koinViewModel
 object HomeTab : Tab {
     override val options: TabOptions
         @Composable
-        get() = TabOptions(0u , title = "Notes", icon = painterResource(R.drawable.btn_plus))
+        get() = TabOptions(0u , title = "Notes", icon = painterResource(R.drawable.outline_devices_24))
 
     @Composable
     override fun Content() {
-        _HomeScreen().Content()
+        HomeScreenView().Content()
     }
-
 }
-class _HomeScreen : Screen {
+
+class HomeScreenView : Screen {
 
     @Composable
     override fun Content() {
@@ -60,7 +59,7 @@ class _HomeScreen : Screen {
     @Composable
     fun HomeScreen(state: HomeScreenUiState, onEvent: (HomeScreenOnEvent) -> Unit) {
         Box(modifier = Modifier.fillMaxSize()) {
-            Scaffold() { innerPadding ->
+            Scaffold { innerPadding ->
                 HomeScreenContent(state, modifier = Modifier.padding(innerPadding), onEvent)
             }
         }
@@ -74,7 +73,6 @@ class _HomeScreen : Screen {
         onEvent: (HomeScreenOnEvent) -> Unit
     ) {
         val context = LocalContext.current
-        val navigator = LocalNavigator.currentOrThrow.parent
         Log.d("HomeScreen", "PDF files count: ${state.pdfFiles.size}")
 
 
@@ -83,14 +81,17 @@ class _HomeScreen : Screen {
             onEvent.invoke(HomeScreenOnEvent.loadPdf)
         }
 
-        if (state.loading) {
-            Text("Loading PDFs...", modifier = modifier)
-        } else if (state.pdfFiles.isNotEmpty()) {
+        if (state.loading) Text("Loading PDFs...", modifier = modifier) else if (state.pdfFiles.isNotEmpty())
             LazyColumn(modifier = modifier.fillMaxSize()) {
                 items(state.pdfFiles) { pdf ->
                     ListItem(
                         modifier = Modifier.clickable {
-                            navigator?.push(_Pdfviewer(pdf.uri.toString()))
+                            val intent = Intent(context, SecondActivity::class.java).apply {
+                                   putExtra("uri", pdf.uri.toString())
+                                   addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                   addFlags(Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                            }
+                            context.startActivity(intent)
                         },
                         headlineContent = { Text(pdf.name) },
                         leadingContent = {
@@ -98,10 +99,9 @@ class _HomeScreen : Screen {
                         }
                     )
                 }
-            }
-        } else {
+            } else {
             Text(text = "No PDF files found", modifier = modifier)
-        }
+            }
     }
 }
 

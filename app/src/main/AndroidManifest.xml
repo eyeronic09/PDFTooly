@@ -23,15 +23,19 @@
         <activity android:name="com.rajat.pdfviewer.PdfViewerActivity" />
         <activity
             android:name=".MainActivity"
+            android:documentLaunchMode="always"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Freepdf">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PDFviewer.SecondActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.Freepdf" />
     </application>
 
 </manifest>
